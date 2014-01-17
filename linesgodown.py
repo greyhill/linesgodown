@@ -41,6 +41,12 @@ def plot(*args, **kwargs):
         x = args[0]
         y = args[1]
         name = args[2]
+    elif len(args) % 3 == 0:
+        for (x, y, name) in zip(*[iter(args)]*3):
+            plot(x, y, name, **kwargs)
+        return
+    else: 
+        raise ValueError('unknown usage')
 
     if 'axis' is kwargs:
         axis = kwargs['axis']
@@ -66,8 +72,11 @@ def plot(*args, **kwargs):
     print x, y
     axis.plot(x, y, color=color, linewidth = 2)
 
-    # todo: need a smarter way to determine where to put the symbols
-    sigil_at = len(x) // 4
+    if 'sigil_at' in kwargs:
+        sigil_at = kwargs['sigil_at']
+    else:
+        # todo: need a smarter way to determine where to put the symbols
+        sigil_at = len(x) // 4
     axis.plot((x[sigil_at],), (y[sigil_at],), '-%s' % symbol, color=color, 
             linewidth = 2, label = name)
 
