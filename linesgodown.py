@@ -69,7 +69,6 @@ def plot(*args, **kwargs):
     symbol_colors_used.append(symbol_color) 
     symbol, color = symbol_color
 
-    print x, y
     axis.plot(x, y, color=color, linewidth = 2)
 
     if 'sigil_at' in kwargs:
