@@ -6,6 +6,7 @@ symbols_colors = [ \
         ('s', 'red'),
         ('p', 'purple'),
         ('D', 'orange'),
+        ('d', 'cyan')
         ]
 
 fake_names = [ \
