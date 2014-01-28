@@ -43,6 +43,11 @@ def autocolor(*names, **kwargs):
 
     The "jobs" series will always appear in e.g., blue with circle markers, etc.
 
+    Instead of a string, you can give an `iterable` of strings, all of which will
+    be associated with the name color/symbol pair.  e.g.,
+
+    >>> autocolor('money', ('jobs', 'jerbs'))
+
     autocolor understands the following kwargs:
     - axis : matplotlib axis object to associate this list with
     - symbols_colors : an alternate list of symbols and colors to use for
@@ -59,7 +64,15 @@ def autocolor(*names, **kwargs):
     else:
         sc = symbols_colors
 
-    ac_map = dict((name, sc) for name, sc in zip(names, sc))
+    ac_map = {}
+    sc = sc[:]
+    for name in names:
+      if isinstance(name, str):
+        ac_map[name] = sc.pop(0)
+      else:
+        multi_sc = sc.pop(0)
+        for nname in name:
+          ac_map[nname] = multi_sc
     axis._linesgodown_autocolor_map = ac_map
 
 def plot(*args, **kwargs):
