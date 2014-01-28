@@ -10,7 +10,7 @@ nonmonotonic fashion.  The usage is the same.
 
 ## usage
 
-There are currently two function, `plot` and `autocolor`.  The functions
+There are currently two functions, `plot` and `autocolor`.  The functions
 are reasonably well documented, here's an example use:
 
 ```
