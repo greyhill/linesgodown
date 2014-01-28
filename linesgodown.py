@@ -24,6 +24,31 @@ fake_names = [ \
         'Featherwicks' ]
 
 def autocolor(*names, **kwargs):
+    '''Associate names with colors for consistency across multiple plots.
+
+    Calling autocolor(list_of_names) before calling any plot commands will
+    ensure that a named series will always have the same color associated
+    with it.
+
+    Example usage:
+
+    >>> autocolor('jobs', 'money', 'work')
+    >>> plot(t, j, 'jobs')
+    >>> plot(t, m, 'money')
+    >>> figure()
+    >>> autocolor('jobs', 'money', 'work')
+    >>> plot(t2, m2, 'money')
+    >>> plot(t2, j2, 'jobs')
+    >>> plot(t2, w, 'work')
+
+    The "jobs" series will always appear in e.g., blue with circle markers, etc.
+
+    autocolor understands the following kwargs:
+    - axis : matplotlib axis object to associate this list with
+    - symbols_colors : an alternate list of symbols and colors to use for
+        associating with names
+
+    '''
     if 'axis' in kwargs:
         axis = kwargs['axis']
     else:
@@ -38,7 +63,29 @@ def autocolor(*names, **kwargs):
     axis._linesgodown_autocolor_map = ac_map
 
 def plot(*args, **kwargs):
-    '''Plot a line, or a bunch of lines, and make them pretty.'''
+    '''Plot a line, or a bunch of lines, and make them pretty.
+
+    Plot a series with [0, ..., N-1] as the horizontal axis, with a fake name:
+    >>> plot(y)
+
+    Plot series y (vertical) against x (horizontal), with a silly fake name:
+    >>> plot(x, y)
+
+    Plot series y (vertical) against x (horizontal), with a given name:
+    >>> plot(x, y, name)
+
+    Do the above with a bunch of series:
+    >>> plot(x1, y1, name1, x2, y2, name2, ...)
+
+    plot also understands the following kwargs:
+    - axis : matplotlib axis to plot onto
+    - symbol_color : a tuple (s, c) of a symbol and color to use,
+        e.g., ('-o', 'blue').  linesgodown has sensible defaults.  See also 
+        linesgodown.autocolor()
+    - symbol_at : index of data at which to place the symbol.  Currently, 
+        some hand-tweaking may be needed to produce readable plots.
+
+    '''
 
     if len(args) == 0:
         # you gotta give me something to work with here!
