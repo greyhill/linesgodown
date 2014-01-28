@@ -23,6 +23,20 @@ fake_names = [ \
         'Chads',
         'Featherwicks' ]
 
+def autocolor(*names, **kwargs):
+    if 'axis' in kwargs:
+        axis = kwargs['axis']
+    else:
+        axis = pylab.gca()
+
+    if 'symbols_colors' in kwargs:
+        sc = kwargs['symbols_colors']
+    else:
+        sc = symbols_colors
+
+    ac_map = dict((name, sc) for name, sc in zip(names, sc))
+    axis._linesgodown_autocolor_map = ac_map
+
 def plot(*args, **kwargs):
     '''Plot a line, or a bunch of lines, and make them pretty.'''
 
@@ -63,6 +77,9 @@ def plot(*args, **kwargs):
         if symbol_color in symbol_colors_used:
             raise ValueError('Symbol/Color pair %s already used' % \
                     str(symbol_color))
+    elif hasattr(axis, '_linesgodown_autocolor_map') \
+            and name in axis._linesgodown_autocolor_map:
+        symbol_color = axis._linesgodown_autocolor_map[name]
     else:
         unused = [ z for z in symbols_colors if z not in symbol_colors_used ]
         symbol_color = unused[0]
@@ -75,7 +92,7 @@ def plot(*args, **kwargs):
     if 'sigil_at' in kwargs:
         sigil_at = kwargs['sigil_at']
     else:
-        # todo: need a smarter way to determine where to put the symbols
+        # todo: need a smarter way to determine where to put the sigils
         sigil_at = len(x) // 4
     axis.plot((x[sigil_at],), (y[sigil_at],), '-%s' % symbol, color=color, 
             linewidth = 2, label = name)
