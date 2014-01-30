@@ -144,16 +144,22 @@ def plot(*args, **kwargs):
         unused = [ z for z in symbols_colors if z not in symbol_colors_used ]
         symbol_color = unused[0]
 
+    if 'alpha' in kwargs:
+      alpha = kwargs['alpha']
+    else:
+      alpha = 1.0
+
     symbol_colors_used.append(symbol_color) 
     symbol, color = symbol_color
 
-    axis.plot(x, y, color=color, linewidth = 2)
+    axis.plot(x, y, color=color, linewidth = 2, alpha = alpha)
 
     if 'sigil_at' in kwargs:
         sigil_at = kwargs['sigil_at']
     else:
         # todo: need a smarter way to determine where to put the sigils
         sigil_at = len(x) // 4
+
     axis.plot((x[sigil_at],), (y[sigil_at],), '-%s' % symbol, color=color, 
             linewidth = 2, label = name)
 
