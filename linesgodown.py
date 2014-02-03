@@ -23,6 +23,40 @@ fake_names = [ \
         'Chads',
         'Featherwicks' ]
 
+def mark_iterate(x, y, x0 = None, index = None, **kwargs):
+    if index is None:
+        if x0 is None:
+            raise ValueError('must provide either x0 or index')
+        xy = sorted(zip((xx, yy) for xx, yy in zip(x, y)))
+        for n, xxyy in enumerate(xy):
+            xx, yy = xxyy[0]
+            if xx >= x0:
+                idx = n
+                break
+    else:
+        idx = index
+
+    if 'axis' in kwargs:
+        axis = kwargs['axis']
+    else:
+        axis = pylab.gca()
+
+    if 'color' in kwargs:
+        color = kwargs['color']
+    else:
+        color = 'black'
+
+    if 'alpha' in kwargs:
+        alpha = kwargs['alpha']
+    else:
+        alpha = .5
+
+    xx = x[idx]
+    yy = y[idx]
+
+    axis.plot(xx, yy, 'o', color=color, alpha=alpha)
+    axis.plot((xx,xx), (0, yy), '--', color=color)
+
 def autocolor(*names, **kwargs):
     '''Associate names with colors for consistency across multiple plots.
 
