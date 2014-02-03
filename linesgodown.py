@@ -24,6 +24,22 @@ fake_names = [ \
         'Featherwicks' ]
 
 def mark_iterate(x, y, x0 = None, index = None, **kwargs):
+    '''Draw a vertical dashed line and circle to a point on a curve.
+
+    Draws a vertical dotted line between the horizontal axis (by default) and
+    the a point on a curve.  The arguments x and y given the coordinates of
+    the curve.  The horizontal location of the point can be given either with
+    'index' (which will draw a point at (x[index], y[index])) or 'x0', which
+    will infer that index value.
+
+    mark_iterate accepts the following kwargs:
+    - color (default: black)
+    - symbol (default: 'o', a circle)
+    - alpha (default: .5)
+    - ybase (default: 0), the point from which to draw the vertical line.
+        Setting this to None will disable the horizontal dashed line.
+
+    '''
     if index is None:
         if x0 is None:
             raise ValueError('must provide either x0 or index')
@@ -51,11 +67,19 @@ def mark_iterate(x, y, x0 = None, index = None, **kwargs):
     else:
         alpha = .5
 
+    if 'ybase' in kwargs:
+        ybase = kwargs['ybase']
+    else:
+        ybase = 0
+
     xx = x[idx]
     yy = y[idx]
 
+    ax = axis.axis()
     axis.plot(xx, yy, 'o', color=color, alpha=alpha)
-    axis.plot((xx,xx), (0, yy), '--', color=color)
+    if ybase is not None:
+        axis.plot((xx,xx), (ybase, yy), '--', color=color)
+    axis.axis(ax)
 
 def autocolor(*names, **kwargs):
     '''Associate names with colors for consistency across multiple plots.
