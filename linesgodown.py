@@ -23,18 +23,62 @@ fake_names = [ \
         'Chads',
         'Featherwicks' ]
 
+def slice3(v, x=.5, y=.5, z=.5, **kwargs):
+    '''A pylab.imshow()-like function to show three slices of volumetric data.
+
+    Accepted kwargs:
+    - 'minmax': tuple of (minvalue, maxvalue) to clip data.  Use None
+        for one argument to do one-sided clipping, e.g., (0, None) to 
+        clip to nonnegative values.
+    - 'interpolation': use some sort of interpolation, by default
+        nearest-value (i.e., no mixing).
+
+    '''
+    # special case for clvol.[Sub|Lazy]Volume (hidden project, sorry)
+    if hasattr(v, 'read'): v = v.read().swapaxes(0,1)
+
+    ix = x
+    iy = y
+    iz = z
+    if isinstance(ix, float): ix = int(v.shape[0]*ix)
+    if isinstance(iy, float): iy = int(v.shape[1]*iy)
+    if isinstance(iz, float): iz = int(v.shape[2]*iz)
+
+    R = v.shape[0]
+    C = v.shape[1]
+    D = v.shape[2]
+
+    tr = pylab.zeros((R+D, C+D))
+    tr[0:R, 0:C] = v[:, :, iz]
+    tr[R:, 0:C] = v[iy, :, :].T
+    tr[0:R, C:] = v[:, ix, :]
+
+    if 'minmax' in kwargs:
+        minmax = kwargs['minmax']
+        if minmax[0] is not None: tr[tr < minmax[0]] = minmax[0]
+        if minmax[0] is not None: tr[tr > minmax[1]] = minmax[1]
+
+    if 'interpolation' in kwargs:
+        interp = kwargs['interpolation']
+    else:
+        interp = 'nearest'
+
+    pylab.imshow(tr, interpolation=interp)
+
 def slice(v, **kwargs):
-    '''A pylab.imshow()-like function for volumetric data.
+    '''A pylab.imshow()-like function to display a slice of volumetric data.
 
     Accepted kwargs:
     - 'x', 'y', or 'z': slice to display.  Can be integral
         or fractional.
-    - 'minmax': tuple of (minvalue, maxvalue) to clip data to
+    - 'minmax': tuple of (minvalue, maxvalue) to clip data.  Use None
+        for one argument to do one-sided clipping, e.g., (0, None) to 
+        clip to nonnegative values.
     - 'interpolation': use some sort of interpolation, by default
             nearest-value (i.e., no mixing).
 
     '''
-    # special case clvol.[Sub|Lazy]Volume (hidden project, sorry)
+    # special case for clvol.[Sub|Lazy]Volume (hidden project, sorry)
     if hasattr(v, 'read'): v = v.read().swapaxes(0,1)
 
     if 'x' in kwargs:
@@ -54,8 +98,8 @@ def slice(v, **kwargs):
 
     if 'minmax' in kwargs:
         minmax = kwargs['minmax']
-        sl[sl < minmax[0]] = minmax[0]
-        sl[sl > minmax[1]] = minmax[1]
+        if minmax[0] is not None: sl[sl < minmax[0]] = minmax[0]
+        if minmax[0] is not None: sl[sl > minmax[1]] = minmax[1]
 
     if 'interpolation' in kwargs:
         interp = kwargs['interpolation']
