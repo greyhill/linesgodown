@@ -23,6 +23,47 @@ fake_names = [ \
         'Chads',
         'Featherwicks' ]
 
+def slice(v, **kwargs):
+    '''A pylab.imshow()-like function for volumetric data.
+
+    Accepted kwargs:
+    - 'x', 'y', or 'z': slice to display.  Can be integral
+        or fractional.
+    - 'minmax': tuple of (minvalue, maxvalue) to clip data to
+    - 'interpolation': use some sort of interpolation, by default
+            nearest-value (i.e., no mixing).
+
+    '''
+    # special case clvol.[Sub|Lazy]Volume (hidden project, sorry)
+    if hasattr(v, 'read'): v = v.read().swapaxes(0,1)
+
+    if 'x' in kwargs:
+        ix = kwargs['x']
+        if isinstance(ix, float): ix = int(ix * v.shape[0])
+        sl = v[ix, :, :]
+    elif 'y' in kwargs:
+        iy = kwargs['y']
+        if isinstance(ix, float): iy = int(iy * v.shape[1])
+        sl = v[:, iy, :]
+    elif 'z' in kwargs:
+        iz = kwargs['z']
+        if isinstance(iz, float): iz = int(iz * v.shape[2])
+        sl = v[:, :, iz]
+    else:
+        raise ValueError('must give "x", "y" or "z"')
+
+    if 'minmax' in kwargs:
+        minmax = kwargs['minmax']
+        sl[sl < minmax[0]] = minmax[0]
+        sl[sl > minmax[1]] = minmax[1]
+
+    if 'interpolation' in kwargs:
+        interp = kwargs['interpolation']
+    else:
+        interp = 'nearest'
+
+    pylab.imshow(sl, interpolation=interp)
+
 def mark_iterate(x, y, x0 = None, index = None, **kwargs):
     '''Draw a vertical dashed line and circle to a point on a curve.
 
