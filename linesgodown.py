@@ -240,6 +240,7 @@ def plot(*args, **kwargs):
         linesgodown.autocolor()
     - symbol_at : index of data at which to place the symbol.  Currently, 
         some hand-tweaking may be needed to produce readable plots.
+    - type: 'plot' or 'semilogy'
 
     '''
 
@@ -295,7 +296,15 @@ def plot(*args, **kwargs):
     symbol_colors_used.append(symbol_color) 
     symbol, color = symbol_color
 
-    axis.plot(x, y, color=color, linewidth = 2, alpha = alpha)
+    if 'type' in kwargs:
+      type = kwargs['type']
+    else:
+      type = 'plot'
+
+    plotfuncs = { 'plot': axis.plot, 'semilogy': axis.semilogy }
+    plot = plotfuncs[type]
+
+    plot(x, y, color=color, linewidth = 2, alpha = alpha)
 
     if 'sigil_at' in kwargs:
         sigil_at = kwargs['sigil_at']
@@ -303,7 +312,7 @@ def plot(*args, **kwargs):
         # todo: need a smarter way to determine where to put the sigils
         sigil_at = len(x) // 4
 
-    axis.plot((x[sigil_at],), (y[sigil_at],), '-%s' % symbol, color=color, 
+    plot((x[sigil_at],), (y[sigil_at],), '-%s' % symbol, color=color, 
             linewidth = 2, label = name)
 
     axis._linesgodown_symbol_colors_used = symbol_colors_used
