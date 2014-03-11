@@ -87,7 +87,7 @@ def slice(v, **kwargs):
         sl = v[ix, :, :]
     elif 'y' in kwargs:
         iy = kwargs['y']
-        if isinstance(ix, float): iy = int(iy * v.shape[1])
+        if isinstance(iy, float): iy = int(iy * v.shape[1])
         sl = v[:, iy, :]
     elif 'z' in kwargs:
         iz = kwargs['z']
