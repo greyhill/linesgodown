@@ -240,7 +240,7 @@ def plot(*args, **kwargs):
         linesgodown.autocolor()
     - symbol_at : index of data at which to place the symbol.  Currently, 
         some hand-tweaking may be needed to produce readable plots.
-    - type: 'plot' or 'semilogy'
+    - type: 'plot,' 'semilogy' or 'semilogy'
 
     '''
 
@@ -301,7 +301,10 @@ def plot(*args, **kwargs):
     else:
       type = 'plot'
 
-    plotfuncs = { 'plot': axis.plot, 'semilogy': axis.semilogy }
+    plotfuncs = { \
+            'plot': axis.plot, 
+            'semilogy': axis.semilogy,
+            'semilogx': axis.semilogx }
     plot = plotfuncs[type]
 
     plot(x, y, color=color, linewidth = 2, alpha = alpha)
