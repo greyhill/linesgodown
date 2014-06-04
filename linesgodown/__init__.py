@@ -48,8 +48,8 @@ def slice3(v, x=.5, y=.5, z=.5, **kwargs):
 
     tr = pylab.zeros((R+D, C+D))
     tr[0:R, 0:C] = v[:, :, iz]
-    tr[R:, 0:C] = v[iy, :, :].T
-    tr[0:R, C:] = v[:, ix, :]
+    tr[R:, 0:C] = v[ix, :, :].T
+    tr[0:R, C:] = v[:, iy, :]
 
     if 'minmax' in kwargs:
         minmax = kwargs['minmax']
