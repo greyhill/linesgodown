@@ -34,8 +34,6 @@ def slice3(v, x=.5, y=.5, z=.5, **kwargs):
         nearest-value (i.e., no mixing).
 
     '''
-    # special case for clvol.[Sub|Lazy]Volume (hidden project, sorry)
-    if hasattr(v, 'read'): v = v.read().swapaxes(0,1)
 
     ix = x
     iy = y
@@ -78,8 +76,6 @@ def slice(v, **kwargs):
             nearest-value (i.e., no mixing).
 
     '''
-    # special case for clvol.[Sub|Lazy]Volume (hidden project, sorry)
-    if hasattr(v, 'read'): v = v.read().swapaxes(0,1)
 
     if 'x' in kwargs:
         ix = kwargs['x']
